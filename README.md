@@ -1,4 +1,4 @@
-# interligencia.artificial
+
 
 
 # Inteligência Artificial e Deep Learning
