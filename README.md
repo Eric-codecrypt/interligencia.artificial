@@ -56,4 +56,5 @@ Com o tempo, o computador entende quais ações levam aos melhores resultados, t
 ---
 
 > **Referência:**
+> ![slide](https://inteligencia-artificial--rvp60ht.gamma.site)
 > Material didático (PDFs) disponibilizado pelo professor **João Cavalari**, bem como os conhecimentos e conteúdos por ele transmitidos ao longo das aulas.
