@@ -58,3 +58,119 @@ Com o tempo, o computador entende quais ações levam aos melhores resultados, t
 > **Referência:**
 > [slide](https://inteligencia-artificial--rvp60ht.gamma.site)
 > Material didático (PDFs) disponibilizado pelo professor **João Cavalari**, bem como os conhecimentos e conteúdos por ele transmitidos ao longo das aulas.
+
+> Codigo facerec::
+
+import cv2
+import time
+
+# ==========================
+# CLASSIFICADORES
+# ==========================
+face_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades + 'haarcascade_frontalface_default.xml'
+)
+smile_cascade = cv2.CascadeClassifier(
+    cv2.data.haarcascades + 'haarcascade_smile.xml'
+)
+
+# ==========================
+# WEBCAM + PROPRIEDADES
+# ==========================
+cap = cv2.VideoCapture(0)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 640)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
+cap.set(cv2.CAP_PROP_FPS, 30)
+
+# ==========================
+# LOOP PRINCIPAL
+# ==========================
+while True:
+    start_time = time.time()
+
+    ret, frame = cap.read()
+    if not ret:
+        break
+
+    # ==========================
+    # PRÉ-PROCESSAMENTO
+    # ==========================
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.GaussianBlur(gray, (5, 5), 0)
+    gray = cv2.equalizeHist(gray)
+
+    # ==========================
+    # DETECÇÃO DE ROSTO
+    # ==========================
+    faces = face_cascade.detectMultiScale(
+        gray,
+        scaleFactor=1.2,
+        minNeighbors=6,
+        minSize=(80, 80)
+    )
+
+    for (x, y, w, h) in faces:
+        cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 255, 0), 2)
+
+        roi_gray = gray[y:y+h, x:x+w]
+
+        # ==========================
+        # DETECÇÃO DE SORRISO
+        # ==========================
+        smiles = smile_cascade.detectMultiScale(
+            roi_gray,
+            scaleFactor=2,
+            minNeighbors=20
+        )
+
+        if len(smiles) > 0:
+            cv2.putText(frame, "Face Sorrindo", (x, y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+        else:
+            cv2.putText(frame, "Face Neutra", (x, y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (255, 255, 255), 2)
+
+        # ==========================
+        # INFO EXTRA
+        # ==========================
+        area = w * h
+        cv2.putText(frame, f"Area: {area}", (x, y+h+20),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (200, 200, 200), 1)
+
+    # ==========================
+    # FPS
+    # ==========================
+    fps = int(1 / (time.time() - start_time))
+    cv2.putText(frame, f"FPS: {fps}", (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
+
+    # ==========================
+    # EXIBIÇÃO
+    # ==========================
+    cv2.imshow("Detector Facial - OpenCV (Avancado)", frame)
+
+    # ==========================
+    # TECLAS
+    # ==========================
+    key = cv2.waitKey(1) & 0xFF
+    if key == ord('q'):
+        break
+    elif key == ord('s'):
+        cv2.imwrite("captura.png", frame)
+        print("📸 Foto salva!")
+
+# ==========================
+# FINALIZAÇÃO
+# ==========================
+cap.release()
+cv2.destroyAllWindows()
+
+requerimentos-------------------------------------
+https://pyenv-win.github.io/pyenv-win/
+
+pyenv install 3.10
+pyenv global 3.10
+pip install poetry
+poetry config --list
+poetry config virtualenvs.in-project true
+pip install opencv-python
