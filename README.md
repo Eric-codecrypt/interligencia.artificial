@@ -60,9 +60,9 @@ Com o tempo, o computador entende quais ações levam aos melhores resultados, t
 > Material didático (PDFs) disponibilizado pelo professor **João Cavalari**, bem como os conhecimentos e conteúdos por ele transmitidos ao longo das aulas.
 
 > Codigo facerec::
-
+```
 import cv2
-import time
+import time 
 
 # ==========================
 # CLASSIFICADORES
@@ -169,6 +169,7 @@ requerimentos-------------------------------------
 https://pyenv-win.github.io/pyenv-win/
 
 pyenv install 3.10
+
 pyenv global 3.10
 pip install poetry
 poetry config --list
